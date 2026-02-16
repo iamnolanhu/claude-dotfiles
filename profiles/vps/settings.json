@@ -1,0 +1,124 @@
+{
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(bun run *)",
+      "Bash(bun add *)",
+      "Bash(bun install*)",
+      "Bash(bunx *)",
+      "Bash(bun --version*)",
+      "Bash(bun create *)",
+      "Bash(uv *)",
+      "Bash(uvx *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git checkout*)",
+      "Bash(git switch*)",
+      "Bash(git restore*)",
+      "Bash(git show*)",
+      "Bash(git worktree*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(mkdir -p *)",
+      "Bash(touch *)",
+      "Bash(cp * *)",
+      "Bash(mv * *)",
+      "Bash(pwd*)",
+      "Bash(which *)",
+      "Bash(wc *)",
+      "Bash(tsc *)",
+      "Bash(node *)",
+      "Bash(tsx *)",
+      "Bash(vitest *)",
+      "Bash(jest *)",
+      "Bash(bun test*)",
+      "Bash(eslint *)",
+      "Bash(prettier *)",
+      "Bash(bunx prettier *)",
+      "Bash(bunx eslint *)",
+      "Bash(ps aux*)",
+      "Bash(lsof *)",
+      "Bash(netstat *)",
+      "Bash(env | grep *)",
+      "Bash(printenv *)",
+      "Bash(date*)",
+      "Bash(whoami*)",
+      "Bash(hostname*)",
+      "Bash(curl -s *)",
+      "Bash(curl --silent *)",
+      "Bash(systemctl status *)",
+      "Bash(journalctl *)",
+      "Bash(docker ps*)",
+      "Bash(docker logs *)",
+      "Bash(docker compose *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(redis-cli flushall*)",
+      "Bash(redis-cli flushdb*)",
+      "Bash(git reset --hard*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(DROP TABLE*)",
+      "Bash(truncate *)"
+    ],
+    "ask": []
+  },
+  "model": "sonnet",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/cleanup-subagents.sh 2 5 >/dev/null 2>&1 || true"
+          },
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"Did Claude make any mistakes? Run /revise-claude-md to capture learnings\"}'"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": []
+      }
+    ],
+    "SessionStart": []
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-mem@thedotmack": true,
+    "superpowers@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  }
+}

@@ -1,0 +1,124 @@
+# claude-dotfiles
+
+Portable Claude Code configuration with profile-based setup. One repo, works on any machine — desktop or headless VPS.
+
+## What this does
+
+- **Layered CLAUDE.md** — generic base + environment profile + personal overlay
+- **Profile system** — desktop (full browser tools, opus) vs VPS (headless, sonnet, minimal plugins)
+- **Interactive installer** — picks profile, sets GitHub username, configures MCP servers
+- **Cross-platform scripts** — OS-aware (macOS + Linux) subagent cleanup, statusline, gate scripts
+- **No personal info committed** — infrastructure, IPs, SSH shortcuts live in gitignored `.local/`
+
+## Quick start
+
+```bash
+git clone https://github.com/iamnolanhu/claude-dotfiles.git
+cd claude-dotfiles
+./setup.sh
+```
+
+The installer will:
+
+1. Ask your machine type (Desktop / VPS)
+2. Ask your GitHub username (optional, for commit policy)
+3. Ask if you want AI attribution hidden in commits
+4. Link settings, scripts, and statusline to `~/.claude/`
+5. Assemble `CLAUDE.md` from base + profile + local layers
+6. Walk you through MCP server selection
+
+## Structure
+
+```
+claude-dotfiles/
+├── setup.sh                     # Interactive installer
+├── base/
+│   └── CLAUDE.md               # Generic instructions (no personal info)
+├── profiles/
+│   ├── desktop/
+│   │   ├── CLAUDE.md           # Browser automation priorities
+│   │   └── settings.json       # Full plugins, opus, prettier hook
+│   └── vps/
+│       ├── CLAUDE.md           # Headless constraints, resource limits
+│       └── settings.json       # Minimal plugins, sonnet, docker perms
+├── examples/
+│   └── local-CLAUDE.md         # Template for personal config
+├── .local/                      # Gitignored — your machine-specific config
+│   └── CLAUDE.md               # Infrastructure, SSH, self-hosted services
+├── scripts/
+│   ├── cleanup-subagents.sh    # Kill stale subagents by age + count
+│   ├── code-simplifier-gate.sh # Cooldown gate for code review hook
+│   └── kill-all-orphans.sh     # Nuclear cleanup for orphaned processes
+├── statusline.sh                # Multi-line statusline (git, cost, context %)
+├── .env.example                 # API key template
+└── .gitignore
+```
+
+## How CLAUDE.md assembly works
+
+Your final `~/.claude/CLAUDE.md` is built from three layers:
+
+| Layer       | Source                         | Contains                                                                 |
+| ----------- | ------------------------------ | ------------------------------------------------------------------------ |
+| **Base**    | `base/CLAUDE.md`               | Package managers, tool priorities, engineering standards, subagent rules |
+| **Profile** | `profiles/<profile>/CLAUDE.md` | Desktop: browser tools. VPS: headless constraints                        |
+| **Local**   | `.local/CLAUDE.md`             | Your infrastructure, SSH hosts, self-hosted service URLs                 |
+
+Run `./setup.sh update` after editing any source layer to reassemble.
+
+## Profiles
+
+### Desktop
+
+- Full plugin set (26 plugins including agent-browser, typescript-lsp, frontend-design)
+- Browser automation tool priority (agent-browser > chrome-devtools > playwright)
+- Prettier formatting hook on file writes
+- Code simplifier gate on session stop
+- Default model: **opus**
+
+### VPS
+
+- Minimal plugin set (8 core plugins)
+- No browser tools offered during MCP setup
+- Docker and systemctl permissions added
+- Tighter subagent limits (2 max, 5min TTL)
+- Default model: **sonnet**
+
+## Commands
+
+```bash
+./setup.sh              # Initial setup (profile + integrations)
+./setup.sh add <name>   # Add/enable a single MCP integration
+./setup.sh list         # Show all integrations and their status
+./setup.sh env KEY [v]  # Add an API key to ~/.claude/.env
+./setup.sh update       # Pull latest and reassemble config
+```
+
+## Personalizing
+
+After running setup, edit `.local/CLAUDE.md` with your machine-specific config. See `examples/local-CLAUDE.md` for the template. Common additions:
+
+- Server IPs and Tailscale topology
+- SSH shortcuts and port forwards
+- Self-hosted service URLs (crawl4ai, n8n, etc.)
+- Project template references
+- File sharing and sync setup
+
+## MCP Integrations
+
+| Integration         | Needs API Key | Desktop Only |
+| ------------------- | :-----------: | :----------: |
+| context7            |               |              |
+| serena              |               |              |
+| morphllm-fast-apply |               |              |
+| chrome-devtools     |               |     yes      |
+| firecrawl           |      yes      |              |
+| github              |      yes      |              |
+| openrouter          |      yes      |              |
+| apify               |      yes      |              |
+| digitalocean        |      yes      |              |
+| n8n                 |      yes      |              |
+| crawl4ai            |      yes      |              |
+| playwright          |               |     yes      |
+| browser-tools       |               |     yes      |
+| magic               |               |     yes      |
