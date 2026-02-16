@@ -1,5 +1,7 @@
 # Claude Code Configuration
 
+> **This is a sample output.** The actual `~/.claude/CLAUDE.md` is assembled by `./setup.sh` from `base/CLAUDE.md` + `profiles/<profile>/CLAUDE.md` + `.local/CLAUDE.md`.
+
 ## Key File Locations
 
 | File                              | Purpose                                                 |
@@ -72,7 +74,7 @@ Never expose secrets: don't commit `.env`, don't log keys, don't hardcode. Refer
 
 ## Git Commit Policy
 
-{{GIT_COMMIT_POLICY}}
+Use clean, professional commit messages. Follow the repository's existing commit style.
 
 ## Claude Code Auto-Update Fix
 

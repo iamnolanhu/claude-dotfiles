@@ -300,6 +300,14 @@ cmd_setup() {
   mkdir -p "$CLAUDE_DIR/scripts"
   mkdir -p "$CLAUDE_DIR/.backups"
   mkdir -p "$CLAUDE_DIR/.changelog"
+  mkdir -p "$CLAUDE_DIR/references"
+
+  # Copy reference files
+  for ref in "$DOTFILES_DIR"/references/*.md; do
+    [ -f "$ref" ] || continue
+    cp "$ref" "$CLAUDE_DIR/references/$(basename "$ref")"
+  done
+  ok "Reference files copied to ~/.claude/references/"
 
   # Assemble CLAUDE.md from layers
   assemble_claude_md "$profile" "$github_user" "$hide_ai"
@@ -609,6 +617,14 @@ cmd_update() {
   if [ -f "$DOTFILES_DIR/.local/.hide-ai" ]; then
     hide_ai=$(cat "$DOTFILES_DIR/.local/.hide-ai")
   fi
+
+  # Update reference files
+  mkdir -p "$CLAUDE_DIR/references"
+  for ref in "$DOTFILES_DIR"/references/*.md; do
+    [ -f "$ref" ] || continue
+    cp "$ref" "$CLAUDE_DIR/references/$(basename "$ref")"
+  done
+  ok "Reference files updated"
 
   # Reassemble CLAUDE.md
   assemble_claude_md "$profile" "$github_user" "$hide_ai"
