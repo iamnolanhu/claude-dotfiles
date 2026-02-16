@@ -47,6 +47,13 @@
       "Bash(tsc *)",
       "Bash(node *)",
       "Bash(tsx *)",
+      "Bash(next dev*)",
+      "Bash(next build*)",
+      "Bash(next start*)",
+      "Bash(next lint*)",
+      "Bash(drizzle-kit *)",
+      "Bash(bunx drizzle-kit *)",
+      "Bash(sqlite3 *.db *)",
       "Bash(vitest *)",
       "Bash(jest *)",
       "Bash(bun test*)",
@@ -54,6 +61,10 @@
       "Bash(prettier *)",
       "Bash(bunx prettier *)",
       "Bash(bunx eslint *)",
+      "Bash(redis-cli ping*)",
+      "Bash(redis-cli info*)",
+      "Bash(redis-cli keys *)",
+      "Bash(redis-cli get *)",
       "Bash(ps aux*)",
       "Bash(lsof *)",
       "Bash(netstat *)",
@@ -62,6 +73,8 @@
       "Bash(date*)",
       "Bash(whoami*)",
       "Bash(hostname*)",
+      "Bash(bun pm ls*)",
+      "Bash(bun outdated*)",
       "Bash(curl -s *)",
       "Bash(curl --silent *)",
       "Bash(systemctl status *)",
@@ -83,14 +96,29 @@
     ],
     "ask": []
   },
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(cat | jq -r '.tool_input.file_path // empty') && [ -n \"$FILE\" ] && (bun run format 2>/dev/null || bunx prettier --write \"$FILE\" 2>/dev/null) || true"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/scripts/cleanup-subagents.sh 2 5 >/dev/null 2>&1 || true"
+            "command": "~/.claude/scripts/cleanup-subagents.sh 5 >/dev/null 2>&1 || true"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/code-simplifier-gate.sh"
           },
           {
             "type": "command",
@@ -107,11 +135,23 @@
     "SessionStart": []
   },
   "enabledPlugins": {
+    "n8n-mcp-skills@n8n-mcp-skills": true,
+    "pg@aiguide": true,
+    "learning-output-style@claude-code-plugins": true,
     "context7@claude-plugins-official": true,
     "serena@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "agent-sdk-dev@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "claude-mem@thedotmack": true,
     "superpowers@claude-plugins-official": true

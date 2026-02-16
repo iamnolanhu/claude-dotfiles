@@ -70,7 +70,7 @@ Run `./setup.sh update` after editing any source layer to reassemble.
 
 ### Desktop
 
-- Full plugin set (26 plugins including agent-browser, typescript-lsp, frontend-design)
+- Full plugin set (26 plugins including agent-browser, frontend-design)
 - Browser automation tool priority (agent-browser > chrome-devtools > playwright)
 - Prettier formatting hook on file writes
 - Code simplifier gate on session stop
@@ -78,11 +78,10 @@ Run `./setup.sh update` after editing any source layer to reassemble.
 
 ### VPS
 
-- Minimal plugin set (8 core plugins)
+- Same plugins, hooks, and model as desktop (minus browser-specific: agent-browser, frontend-design, vercel, stripe)
 - No browser tools offered during MCP setup
-- Docker and systemctl permissions added
-- Tighter subagent limits (2 max, 5min TTL)
-- Default model: **sonnet**
+- Docker, systemctl, and journalctl permissions added
+- Default model: **opus**
 
 ## Commands
 
