@@ -51,6 +51,8 @@ SECRET_PATTERNS = [
     r"xox[baprs]-[A-Za-z0-9-]{10,}",                 # Slack
     r"AKIA[0-9A-Z]{16}",                             # AWS access key id
     r"glpat-[A-Za-z0-9_\-]{20,}",                    # GitLab PAT
+    r"eyJ[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}",  # JWT (Twenty API keys, etc.)
+    r"[Bb]earer\s+eyJ[\w\-]+\.[\w\-]+\.[\w\-]+",     # Authorization: Bearer <jwt>
     # generic: SENSITIVE_VAR = 'long-high-entropy-value'
     r"(TOKEN|API[_-]?KEY|SECRET|PASSWORD|PASSWD|PAT|ACCESS[_-]?KEY)\s*=\s*['\"]?[A-Za-z0-9_\-]{16,}",
 ]
