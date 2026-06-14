@@ -169,6 +169,34 @@ link_file() {
   ok "$(basename "$dst") -> $(basename "$src")"
 }
 
+link_skills() {
+  local profile="$1"
+  local allowlist="$DOTFILES_DIR/profiles/$profile/skills.allowlist"
+
+  [ -f "$allowlist" ] || return 0
+
+  mkdir -p "$CLAUDE_DIR/skills"
+
+  while IFS= read -r skill || [ -n "$skill" ]; do
+    skill=$(echo "$skill" | tr -d ' ')
+    [ -z "$skill" ] && continue
+    case "$skill" in '#'*) continue ;; esac
+
+    local src="$DOTFILES_DIR/skills/$skill"
+    local dst="$CLAUDE_DIR/skills/$skill"
+
+    if [ ! -e "$src" ]; then
+      skip "skill $skill (not in repo, skipped)"
+      continue
+    fi
+
+    # Directory-clobber guard: never overwrite a real (non-symlink) dir
+    [ -e "$dst" ] && [ ! -L "$dst" ] && [ -d "$dst" ] && { warn "skill $skill exists as a real directory, skipped"; continue; }
+
+    link_file "$src" "$dst"
+  done < "$allowlist"
+}
+
 # ── Parse integration fields ─────────────────────────────────────
 get_field() {
   echo "$1" | cut -d'|' -f"$2"
@@ -325,6 +353,9 @@ cmd_setup() {
     link_file "$script" "$CLAUDE_DIR/scripts/$(basename "$script")"
     chmod +x "$CLAUDE_DIR/scripts/$(basename "$script")"
   done
+
+  # Link allowlisted skills for this profile
+  link_skills "$profile"
 
   # ── Create .env if missing ──
   if [ ! -f "$CLAUDE_DIR/.env" ]; then
@@ -639,6 +670,9 @@ cmd_update() {
     link_file "$script" "$CLAUDE_DIR/scripts/$(basename "$script")"
     chmod +x "$CLAUDE_DIR/scripts/$(basename "$script")"
   done
+
+  # Re-link allowlisted skills for this profile
+  link_skills "$profile"
 
   ok "Update complete (profile: $profile)"
 }
